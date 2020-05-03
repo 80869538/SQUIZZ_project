@@ -1,0 +1,6 @@
+[submodule "Backend"]
+	path = Backend
+	url = https://github.com/SinkableFish/COMP90082-Software-Project.git
+[submodule "Frontend"]
+	path = Frontend
+	url = https://github.com/ymh357/Software-Project.git
