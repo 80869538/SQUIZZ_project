@@ -35,7 +35,7 @@ jobs:
 
 
       - run:
-          name: Start container and verify it's working
+          name: Start containers
           command: |
             set -x
             cd Frontend
@@ -45,7 +45,12 @@ jobs:
             git checkout remotes/origin/dockerization
             cd ..
             docker-compose up -d
+
+      - run:
+          name:  verify containers working 
+          command: |
             curl -sSf http://localhost:3000
             curl -sSf http://localhost:5000
             mysql -u root -h localhost -P 3306 -p
             squizz
+     
