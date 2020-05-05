@@ -6,19 +6,21 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
+             - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
+               
+          
       - checkout
-       - run:
-          name: checkout submodules
-          command: |
-            set -x
-            git submodule update --init
-            git submodule update --init --recursive
-            cd frontend
-            git branch checkout remotes/origin/logout
-            cd ..
-            cd backend checkout remotes/origin/dockerization
-            cd ..
+      - run:
+        name: checkout submodules
+        command: |
+          set -x
+          git submodule update --init
+          git submodule update --init --recursive
+          cd frontend
+          git branch checkout remotes/origin/logout
+          cd ..
+          cd backend checkout remotes/origin/dockerization
+          cd ..
 
       # This should go into custom primary image, here's only for the sake of explanation
       - run:
