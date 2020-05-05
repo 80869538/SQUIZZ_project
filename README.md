@@ -16,7 +16,9 @@ In order to run these containers you'll need docker installed.
 
 Open Docker Destop
 
-You must have access to both reference repo
+You must have access to both referenced repo
+ * https://github.com/SinkableFish/COMP90082-Software-Project.git
+ * https://github.com/ymh357/Software-Project.git
 
 ### Installing
 
