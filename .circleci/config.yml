@@ -2,13 +2,14 @@ version: 2
 jobs:
   build:
     machine:
-      image: ubuntu-1604:201903-01
+      - image: ubuntu-1604:201903-01
     steps:
+      
       - add_ssh_keys:
-          fingerprints:
-            - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
+        fingerprints:
+          - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
-       - run:
+      - run:
           name: checkout submodules
           command: |
             set -x
@@ -68,7 +69,7 @@ jobs:
             done
             echo Failed waiting for Postgress && exit 1
             
-       - run:
+      - run:
           name: Waiting for db to be ready
           command: |
             for i in `seq 1 10`;
@@ -78,7 +79,6 @@ jobs:
               sleep 10
             done
             echo Failed waiting for Postgress && exit 1
-
       - run:
           name: Run unit tests
           command: |
