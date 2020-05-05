@@ -1,0 +1,97 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
+      - checkout
+      - run:
+          name: checkout submodules
+          command: |
+            set -x
+            git submodule update --init
+            git submodule update --init --recursive
+            cd Frontend
+            git branch checkout remotes/origin/logout
+            cd ..
+            cd Backend 
+            git checkout remotes/origin/dockerization
+            cd ..
+
+      # This should go into custom primary image, here's only for the sake of explanation
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            sudo mv /tmp/docker/* /usr/bin
+      # This should go into custom primary image, here's only for the sake of explanation
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run:
+          name: Build containers
+          command: |
+            docker-compose build
+            
+      - run:
+          name: Start container
+          command: |
+            docker-compose up -d
+            
+      - run:
+          name: Waiting for frontend to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 3000 && echo Success && exit 0
+              echo -n .
+              sleep 10
+            done
+            echo Failed waiting for Postgress && exit 1
+            
+      - run:
+          name: Waiting for backtend to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 5000 && echo Success && exit 0
+              echo -n .
+              sleep 10
+            done
+            echo Failed waiting for Postgress && exit 1
+            
+      - run:
+          name: Waiting for db to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 3306 && echo Success && exit 0
+              echo -n .
+              sleep 10
+            done
+            echo Failed waiting for Postgress && exit 1
+      - run:
+          name: Run unit tests
+          command: |
+            ls
+
+      - deploy:
+          name: Build and push Docker image
+          command: |
+            ls
+
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results:
+          path: /tmp/test-results
