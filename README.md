@@ -1,6 +1,6 @@
 # SQUIZZ_Project development environment
 
-This project is the integration of frontend, backend and database. It is conducted so to realize continuous integration, automatic testing and automatic testing.
+This project is the integration of frontend, backend and database. It is conducted so to realize continuous integration, automatic testing and automatic deployment.
 
 ## Getting Started
 
