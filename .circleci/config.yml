@@ -6,8 +6,8 @@ jobs:
     steps:
       
       - add_ssh_keys:
-        fingerprints:
-          - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
+          fingerprints:
+            - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
       - run:
           name: checkout submodules
