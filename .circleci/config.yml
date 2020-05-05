@@ -8,16 +8,17 @@ jobs:
           fingerprints:
             - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
-       - run:
+      - run:
           name: checkout submodules
           command: |
             set -x
             git submodule update --init
             git submodule update --init --recursive
-            cd frontend
+            cd Frontend
             git branch checkout remotes/origin/logout
             cd ..
-            cd backend checkout remotes/origin/dockerization
+            cd Backend 
+            git checkout remotes/origin/dockerization
             cd ..
 
       # This should go into custom primary image, here's only for the sake of explanation
@@ -68,7 +69,7 @@ jobs:
             done
             echo Failed waiting for Postgress && exit 1
             
-       - run:
+      - run:
           name: Waiting for db to be ready
           command: |
             for i in `seq 1 10`;
@@ -78,14 +79,15 @@ jobs:
               sleep 10
             done
             echo Failed waiting for Postgress && exit 1
-
       - run:
           name: Run unit tests
           command: |
+            ls
 
       - deploy:
           name: Build and push Docker image
           command: |
+            ls
 
       - store_artifacts:
           path: /tmp/test-results
