@@ -54,7 +54,7 @@ jobs:
           name: Start container
           command: |
             ls
-            docker-compose up
+            docker-compose up -d
 
       - run:
           name: Waiting for frontend to be ready
@@ -122,6 +122,8 @@ workflows:
     jobs:
       - build
       - aws-ecr/build-and-push-image:
+          requires:
+            - build
           create-repo: true
           dockerfile: Dockerfile.dev
           path: ./Frontend
@@ -129,6 +131,8 @@ workflows:
           repo: squizz_frontend
           tag: "$CIRCLE_SHA1"
       - aws-ecr/build-and-push-image:
+          requires:
+            - build
           create-repo: true
           dockerfile: Dockerfile.dev
           path: ./Backend
