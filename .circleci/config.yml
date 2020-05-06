@@ -70,46 +70,10 @@ jobs:
           name: Run unit tests
           command: |
             ls
-      - aws-ecr/build-and-push-image:
-          name: Push fronedend image
-          account-url: AWS_ECR_ACCOUNT_URL
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          create-repo: true
-          dockerfile: Dockerfile
-          path: ./Frontend
-          region: AWS_REGION
-          repo: circleci-ecr-orb-demo
-          tag: "$CIRCLE_SHA1"
-      
-      - aws-ecr/build-and-push-image:
-        name: Push backend image
-        account-url: AWS_ECR_ACCOUNT_URL
-        aws-access-key-id: AWS_ACCESS_KEY_ID
-        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-        create-repo: true
-        dockerfile: Dockerfile
-        path: ./Backend
-        region: AWS_REGION
-        repo: circleci-ecr-orb-demo
-        tag: "$CIRCLE_SHA1"
-
-      - aws-ecr/build-and-push-image:
-        name: Push database image
-        account-url: AWS_ECR_ACCOUNT_URL
-        aws-access-key-id: AWS_ACCESS_KEY_ID
-        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-        create-repo: true
-        dockerfile: Dockerfile
-        path: ./db
-        region: AWS_REGION
-        repo: circleci-ecr-orb-demo
-        tag: "$CIRCLE_SHA1"
-
       - deploy:
-          name: Build and push Docker image
-          command: |
-            ls
+        name: Build and push Docker image
+        command: |
+          ls
 
       - store_artifacts:
           path: /tmp/test-results
@@ -117,3 +81,41 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
+    
+            
+  - aws-ecr/build-and-push-image:
+      name: Push fronedend image
+      account-url: AWS_ECR_ACCOUNT_URL
+      aws-access-key-id: AWS_ACCESS_KEY_ID
+      aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+      create-repo: true
+      dockerfile: Dockerfile
+      path: ./Frontend
+      region: AWS_REGION
+      repo: circleci-ecr-orb-demo
+      tag: "$CIRCLE_SHA1"
+  
+  - aws-ecr/build-and-push-image:
+    name: Push backend image
+    account-url: AWS_ECR_ACCOUNT_URL
+    aws-access-key-id: AWS_ACCESS_KEY_ID
+    aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+    create-repo: true
+    dockerfile: Dockerfile
+    path: ./Backend
+    region: AWS_REGION
+    repo: circleci-ecr-orb-demo
+    tag: "$CIRCLE_SHA1"
+
+  - aws-ecr/build-and-push-image:
+    name: Push database image
+    account-url: AWS_ECR_ACCOUNT_URL
+    aws-access-key-id: AWS_ACCESS_KEY_ID
+    aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+    create-repo: true
+    dockerfile: Dockerfile
+    path: ./db
+    region: AWS_REGION
+    repo: circleci-ecr-orb-demo
+    tag: "$CIRCLE_SHA1"
+
