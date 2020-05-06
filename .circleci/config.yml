@@ -1,4 +1,6 @@
 version: 2
+orbs:
+  aws-ecr: circleci/aws-ecr@6.7.0
 jobs:
   build:
     machine:
@@ -8,8 +10,28 @@ jobs:
           fingerprints:
             - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
+
       - run:
-          name: checkout submodules
+        name: Install AWS CLI
+        command: |
+          if [[ $(command -v pip) == "" ]]; then
+            echo "PIP is required to install AWS CLI and is not available."
+            exit 1
+          else
+            if [[ $(command -v sudo) == "" ]]; then
+              echo "SUDO is required to install AWS CLI and is not available."
+              exit 1
+            else
+              if [[ $(command -v aws) == "" ]]; then
+                sudo pip install awscli
+              else
+                echo "AWS CLI is already installed."
+              fi
+            fi
+          fi
+          
+      - run:
+          name: Checkout submodules
           command: |
             set -x
             git submodule update --init
@@ -48,41 +70,60 @@ jobs:
             docker-compose up -d
             
       - run:
-          name: Waiting for frontend to be ready
+          name: Test Frontend accessibility
           command: |
-            for i in `seq 1 10`;
-            do
-              nc -z localhost 3000 && echo Success && exit 0
-              echo -n .
-              sleep 10
-            done
-            echo Failed waiting for Postgress && exit 1
+            nc -zv 127.0.0.1 3000 && echo Success && exit 0
+
+            
             
       - run:
-          name: Waiting for backtend to be ready
+          name: Test Backend accessibility
           command: |
-            for i in `seq 1 10`;
-            do
-              nc -z localhost 5000 && echo Success && exit 0
-              echo -n .
-              sleep 10
-            done
-            echo Failed waiting for Postgress && exit 1
+            nc -zv 127.0.0.1 5000 && echo Success && exit 0
             
       - run:
-          name: Waiting for db to be ready
+          name: Test Mysql accessibility
           command: |
-            for i in `seq 1 10`;
-            do
-              nc -z localhost 3306 && echo Success && exit 0
-              echo -n .
-              sleep 10
-            done
-            echo Failed waiting for Postgress && exit 1
+            nc -zv 127.0.0.1 3306 && echo Success && exit 0
       - run:
           name: Run unit tests
           command: |
             ls
+      - aws-ecr/build-and-push-image:
+          name: Push fronedend image
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: Dockerfile
+          path: ./Frontend
+          region: AWS_REGION
+          repo: circleci-ecr-orb-demo
+          tag: "$CIRCLE_SHA1"
+      
+      - aws-ecr/build-and-push-image:
+        name: Push backend image
+        account-url: AWS_ECR_ACCOUNT_URL
+        aws-access-key-id: AWS_ACCESS_KEY_ID
+        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+        create-repo: true
+        dockerfile: Dockerfile
+        path: ./Backend
+        region: AWS_REGION
+        repo: circleci-ecr-orb-demo
+        tag: "$CIRCLE_SHA1"
+
+      - aws-ecr/build-and-push-image:
+        name: Push database image
+        account-url: AWS_ECR_ACCOUNT_URL
+        aws-access-key-id: AWS_ACCESS_KEY_ID
+        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+        create-repo: true
+        dockerfile: Dockerfile
+        path: ./db
+        region: AWS_REGION
+        repo: circleci-ecr-orb-demo
+        tag: "$CIRCLE_SHA1"
 
       - deploy:
           name: Build and push Docker image
