@@ -52,6 +52,7 @@ jobs:
       - run:
           name: Start container
           command: |
+            ls
             docker-compose up
 
       - run:
