@@ -119,23 +119,19 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
+    - aws-ecr/build-and-push-image:
+        create-repo: true
+        dockerfile: Dockerfile.dev
+        path: ./Frontend
+        region: AWS_REGION
+        repo: squizz_frontend
+        tag: "$CIRCLE_SHA1"
 workflows:
   version: 2.1
   build_and_test:
     jobs:
       - build
-      - aws-ecr/build-and-push-image:
-          steps:
-            - restore_cache: # Restores the cached dependency.
-                key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}  
-          requires:
-            - build
-          create-repo: true
-          dockerfile: Dockerfile.dev
-          path: ./Frontend
-          region: AWS_REGION
-          repo: squizz_frontend
-          tag: "$CIRCLE_SHA1"
+
       - aws-ecr/build-and-push-image:
           requires:
             - build
