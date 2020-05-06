@@ -90,6 +90,8 @@ jobs:
           name: Test Frontend accessibility
           command: |
             nc -zv 127.0.0.1 3000 && echo Success && exit 0
+      - aws-ecr/push-image:
+          repo: squizz_backend
 
             
             
@@ -106,12 +108,7 @@ jobs:
           name: Run unit tests
           command: |
             ls
-      - save_cache: # Caches dependencies with a cache key
-      # template for an environment variable,
-      # see circleci.com/docs/2.0/caching/
-          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-            - .
+
             
       - store_artifacts:
           path: /tmp/test-results
@@ -119,13 +116,7 @@ jobs:
 
       - store_test_results:
           path: /tmp/test-results
-    aws-ecr/build-and-push-image:
-      create-repo: true
-      dockerfile: Dockerfile.dev
-      path: ./Frontend
-      region: AWS_REGION
-      repo: squizz_frontend
-      tag: "$CIRCLE_SHA1"
+
 workflows:
   version: 2.1
   build_and_test:
