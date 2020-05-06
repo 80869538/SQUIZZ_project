@@ -1,6 +1,6 @@
-version: 2
+version: 2.1
 orbs:
-  aws-ecr: circleci/aws-ecr@6.7.0
+  aws-ecr: circleci/aws-ecr@6.8.2
 commands:
   build-and-push-image: circleci/aws-ecr@6.7.0/build-and-push-image
 jobs:
@@ -118,7 +118,7 @@ jobs:
       - store_test_results:
           path: /tmp/test-results
 workflows:
-  version: 2
+  version: 2.1
   build_and_test:
     jobs:
       - build
