@@ -1,6 +1,7 @@
 version: 2
 orbs:
   aws-ecr: circleci/aws-ecr@6.7.0
+
 jobs:
   build:
     machine:
@@ -82,40 +83,42 @@ jobs:
       - store_test_results:
           path: /tmp/test-results
     
-            
-  - aws-ecr/build-and-push-image:
-      name: Push fronedend image
-      account-url: AWS_ECR_ACCOUNT_URL
-      aws-access-key-id: AWS_ACCESS_KEY_ID
-      aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-      create-repo: true
-      dockerfile: Dockerfile
-      path: ./Frontend
-      region: AWS_REGION
-      repo: circleci-ecr-orb-demo
-      tag: "$CIRCLE_SHA1"
-  
-  - aws-ecr/build-and-push-image:
-    name: Push backend image
-    account-url: AWS_ECR_ACCOUNT_URL
-    aws-access-key-id: AWS_ACCESS_KEY_ID
-    aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-    create-repo: true
-    dockerfile: Dockerfile
-    path: ./Backend
-    region: AWS_REGION
-    repo: circleci-ecr-orb-demo
-    tag: "$CIRCLE_SHA1"
+workflows:
+  build_and_push_image:
+    jobs:            
+      - aws-ecr/build-and-push-image:
+          name: Push fronedend image
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: Dockerfile
+          path: ./Frontend
+          region: AWS_REGION
+          repo: circleci-ecr-orb-demo
+          tag: "$CIRCLE_SHA1"
+      
+      - aws-ecr/build-and-push-image:
+        name: Push backend image
+        account-url: AWS_ECR_ACCOUNT_URL
+        aws-access-key-id: AWS_ACCESS_KEY_ID
+        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+        create-repo: true
+        dockerfile: Dockerfile
+        path: ./Backend
+        region: AWS_REGION
+        repo: circleci-ecr-orb-demo
+        tag: "$CIRCLE_SHA1"
 
-  - aws-ecr/build-and-push-image:
-    name: Push database image
-    account-url: AWS_ECR_ACCOUNT_URL
-    aws-access-key-id: AWS_ACCESS_KEY_ID
-    aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-    create-repo: true
-    dockerfile: Dockerfile
-    path: ./db
-    region: AWS_REGION
-    repo: circleci-ecr-orb-demo
-    tag: "$CIRCLE_SHA1"
+      - aws-ecr/build-and-push-image:
+        name: Push database image
+        account-url: AWS_ECR_ACCOUNT_URL
+        aws-access-key-id: AWS_ACCESS_KEY_ID
+        aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+        create-repo: true
+        dockerfile: Dockerfile
+        path: ./db
+        region: AWS_REGION
+        repo: circleci-ecr-orb-demo
+        tag: "$CIRCLE_SHA1"
 
