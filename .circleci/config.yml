@@ -1,8 +1,7 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@6.8.2
-commands:
-  build-and-push-image: circleci/aws-ecr@6.7.0/build-and-push-image
+
 jobs:
   build:
     machine:
@@ -122,16 +121,14 @@ workflows:
   build_and_test:
     jobs:
       - build
-      - build-and-push-image:
-          name: Push frontend image
+      - aws-ecr/build-and-push-image:
           create-repo: true
           dockerfile: Dockerfile.dev
           path: ./Frontend
           region: AWS_REGION
           repo: squizz_frontend
           tag: "$CIRCLE_SHA1"
-      - build-and-push-image:
-          name: Push backend image
+      - aws-ecr/build-and-push-image:
           create-repo: true
           dockerfile: Dockerfile.dev
           path: ./Backend
