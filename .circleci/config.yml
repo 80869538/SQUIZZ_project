@@ -52,7 +52,7 @@ jobs:
       - run:
           name: Start container
           command: |
-            docker-compose up -d
+            docker-compose up
 
       - run:
           name: Waiting for frontend to be ready
