@@ -85,8 +85,7 @@ jobs:
     
 workflows:
   version: 2
-
- push_frontend_image:
+  push_frontend_image:
     jobs:            
       - aws-ecr/build-and-push-image:
 
@@ -113,7 +112,8 @@ workflows:
         region: AWS_REGION
         repo: circleci-ecr-orb-demo
         tag: "$CIRCLE_SHA1"
- push_db_image:
+
+  push_db_image:
     jobs:
 
       - aws-ecr/build-and-push-image:
