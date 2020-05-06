@@ -10,25 +10,6 @@ jobs:
           fingerprints:
             - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
-
-      - run:
-        name: Install AWS CLI
-        command: |
-          if [[ $(command -v pip) == "" ]]; then
-            echo "PIP is required to install AWS CLI and is not available."
-            exit 1
-          else
-            if [[ $(command -v sudo) == "" ]]; then
-              echo "SUDO is required to install AWS CLI and is not available."
-              exit 1
-            else
-              if [[ $(command -v aws) == "" ]]; then
-                sudo pip install awscli
-              else
-                echo "AWS CLI is already installed."
-              fi
-            fi
-          fi
           
       - run:
           name: Checkout submodules
