@@ -20,6 +20,7 @@ jobs:
             git submodule update --init --recursive
             cd Frontend
             git checkout remotes/origin/dockerization
+            npm install
             ls
             cd ..
             cd Backend 
