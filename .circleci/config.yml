@@ -7,9 +7,6 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
     steps:
-      - add_ssh_keys:
-          fingerprints:
-            - "f8:5b:5f:b6:16:e8:f9:22:06:fc:61:98:e3:25:80:19"
       - checkout
           
       - run:
@@ -109,7 +106,13 @@ jobs:
           name: Run unit tests
           command: |
             ls
-
+      - save_cache: # Caches dependencies with a cache key
+      # template for an environment variable,
+      # see circleci.com/docs/2.0/caching/
+          key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - .
+            
       - store_artifacts:
           path: /tmp/test-results
           destination: raw-test-output
@@ -122,6 +125,9 @@ workflows:
     jobs:
       - build
       - aws-ecr/build-and-push-image:
+          steps:
+            - restore_cache: # Restores the cached dependency.
+                key: v1-repo-{{ .Environment.CIRCLE_SHA1 }}  
           requires:
             - build
           create-repo: true
