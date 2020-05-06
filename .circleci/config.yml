@@ -120,7 +120,7 @@ jobs:
           repo: squizz_frontend
           tag: "$CIRCLE_SHA1"
 
-      - aws-ecr/build-and-push-image:
+      - build-and-push-image:
         name: Push backend image
         create-repo: true
         dockerfile: Dockerfile.dev
