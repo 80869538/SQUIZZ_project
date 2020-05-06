@@ -111,7 +111,7 @@ jobs:
           command: |
             ls
       
-      - build-and-push-image:
+      - aws-ecr/build-and-push-image:
           name: Push frontend image
           create-repo: true
           dockerfile: Dockerfile.dev
