@@ -2,7 +2,7 @@ version: 2
 orbs:
   aws-ecr: circleci/aws-ecr@6.7.0
 commands:
-  aws-ecr: circleci/aws-ecr@6.7.0
+  build-and-push-image: circleci/aws-ecr@6.7.0/build-and-push-image
 jobs:
   build:
     machine:
@@ -111,7 +111,7 @@ jobs:
           command: |
             ls
       
-      - aws-ecr/build-and-push-image:
+      - build-and-push-image:
           name: Push frontend image
           create-repo: true
           dockerfile: Dockerfile.dev
