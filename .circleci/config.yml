@@ -110,7 +110,18 @@ jobs:
           name: Run unit tests
           command: |
             ls
-      
+
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results:
+          path: /tmp/test-results
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
       - build-and-push-image:
           name: Push frontend image
           create-repo: true
@@ -119,22 +130,14 @@ jobs:
           region: AWS_REGION
           repo: squizz_frontend
           tag: "$CIRCLE_SHA1"
-
       - build-and-push-image:
-        name: Push backend image
-        create-repo: true
-        dockerfile: Dockerfile.dev
-        path: ./Backend
-        region: AWS_REGION
-        repo: squizz_backend
-        tag: "$CIRCLE_SHA1"
-
-
-      - store_artifacts:
-          path: /tmp/test-results
-          destination: raw-test-output
-
-      - store_test_results:
-          path: /tmp/test-results
+          name: Push backend image
+          create-repo: true
+          dockerfile: Dockerfile.dev
+          path: ./Backend
+          region: AWS_REGION
+          repo: squizz_backend
+          tag: "$CIRCLE_SHA1"
+  
     
 
