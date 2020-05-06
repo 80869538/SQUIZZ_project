@@ -14,6 +14,7 @@ services:
             # Where our data will be persisted
 
     frontend:
+        restart: always
         build:
             context: ./Frontend
             dockerfile: Dockerfile.dev
@@ -28,6 +29,7 @@ services:
             
 
     backend:
+        restart: always
         depends_on:
             - "db"
         build:
